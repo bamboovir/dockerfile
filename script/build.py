@@ -1,0 +1,1 @@
+# go build -tags "dfrunmount dfrunsecurity dfsecrets dfssh dfrunnetwork" -mod=vendor -o /usr/local/bin/dockerfile ./cli/dockerfile

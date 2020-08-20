@@ -13,10 +13,6 @@ import (
 	"github.com/spf13/afero"
 )
 
-func remove(slice []*parser.Node, s int) []*parser.Node {
-	return append(slice[:s], slice[s+1:]...)
-}
-
 // File defination
 func File(fs afero.Fs, path string, formater string) ([]string, error) {
 	errmsg := fmt.Sprintf("inspect path: [%s] with formater: [%s] failed", path, formater)
@@ -38,19 +34,7 @@ func File(fs afero.Fs, path string, formater string) ([]string, error) {
 		ast.PrintWarnings(log.StandardLogger().Out)
 		return []string{}, errors.Wrap(err, errmsg)
 	}
-
-	copyChildren := make([]*parser.Node, len(ast.AST.Children))
-
-	copy(copyChildren, ast.AST.Children)
-
-	t := 0
-	for i, b := range copyChildren {
-		if b.Value == "run" {
-			ast.AST.Children = remove(ast.AST.Children, i-t)
-			t++
-		}
-	}
-
+	
 	stages, metaArgs, err := instructions.Parse(ast.AST)
 
 	log.Infof("Stages : [%+v]", stages)
